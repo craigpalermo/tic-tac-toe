@@ -1,9 +1,23 @@
 head
-  script(src='/js/vendor/jquery/jquery.js')
+  //- vendor scripts
+  script(src='/vendor/jquery/jquery.js')
   script(src='https://cdn.firebase.com/js/client/1.0.17/firebase.js')
-  script(src='/js/index.js')
-  link(rel='stylesheet', href='/css/style.css')
+
+  //- vex dialog boxes
+  script(src='/vendor/vex/vex.combined.min.js')
+  script.
+    vex.defaultOptions.className = 'vex-theme-wireframe';
+  link(rel='stylesheet', href='/vendor/vex/vex.css')
+  link(rel='stylesheet', href='/vendor/vex/vex-theme-wireframe.css')
+
+  //- my scripts
+  script(src='index.js')
+  link(rel='stylesheet', href='style.css')
+
+  //- misc settings
   meta(name="viewport", content="width=device-width, user-scalable=no")
+
+  title Tic-Tac-Toe
 
 body
   div.content.flex
@@ -14,7 +28,7 @@ body
       div
         p You're <strong class='under'><span id='player'></span></strong>s
         p It's <strong class='under'><span id='whoseTurn'></span></strong>'s turn
-        p <strong class='under'><span id='players'></span></strong> players currently online
+        p <strong class='under'><span id='players'></span></strong> player(s) currently online
         div#reset Reset
 
     div#board-container

@@ -6,6 +6,13 @@
     "jquery": "*"
   },
   "install": {
-    "path": "js/vendor"
+    "path": "build/vendor",
+    "sources": {
+        "vex":[
+            "bower_components/vex/js/vex.combined.min.js",
+            "bower_components/vex/css/vex.css",
+            "bower_components/vex/css/vex-theme-wireframe.css"
+        ]
+    }
   }
 }

@@ -33,7 +33,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: "coffee/",
                     src: ['**/*.coffee'],
-                    dest: './js/',
+                    dest: './build/',
                     ext: '.js'
                 }]
             }
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: "jade/",
                     src: ['index.jade'],
-                    dest: './',
+                    dest: './build/',
                     ext: '.html'
                 }]
             }
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: "stylus/",
                     src: ['**/*.styl'],
-                    dest: './css/',
+                    dest: './build/',
                     ext: '.css'
                 }]
             }

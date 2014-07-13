@@ -11,6 +11,7 @@ presenceRef.on "value", (snap) ->
     userRef.set(true)
     userRef.onDisconnect().remove()
 
+# update number of players on page
 listRef.on "value", (snap) ->
   $('#players').html(parseInt(snap.numChildren()))
 
@@ -20,12 +21,9 @@ movesMade = 0
 youHaveMoved = false
 
 # select player
-listRef.once 'value', (snapshot) ->
-  players = snapshot.numChildren()
-
-  if players % 2 is 0 then player = 'X' else player = 'O'
+whoseTurnRef.once 'value', (snapshot) ->
+  player = snapshot.val()
   if player is 'X' then opponent = 'O' else opponent = 'X'
-
   $('#player').html player
   $('#opponent').html opponent
 
@@ -73,18 +71,14 @@ boxesRef.on 'value', (snapshot) ->
   if not reset and youHaveMoved
     winner = checkForWinners()
     if winner
-      alert "#{winner} wins!"
+      vex.dialog.alert "#{winner} wins!"
       gameOver = true
     else if movesMade >= 9
-      alert "It's a draw!"
+      vex.dialog.alert "It's a draw!"
       gameOver = true
 
   # to cover the case when opponent resets, turn off our reset flag
   reset = false
-
-####################
-# Game functions
-####################
 
 # change the player at box
 checkBox = (box) ->
@@ -98,7 +92,7 @@ checkBox = (box) ->
 
     if whoseTurn is player
       if $('#' + parseInt(box)).html() is 'X' or $('#' + parseInt(box)).html() is 'O'
-        alert "You can't move there!"
+        vex.dialog.alert "You can't move there!"
       else
         # update letter in selected box
         boxesRef.child(box).set({player: player})
@@ -111,7 +105,7 @@ checkBox = (box) ->
         # you have moved
         youHaveMoved = true
     else
-      alert "It's not your turn yet!"
+      vex.dialog.alert "It's not your turn yet!"
 
 # returns O if you're X, and X otherwise
 getOpponent = ->
