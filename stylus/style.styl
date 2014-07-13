@@ -13,13 +13,32 @@ html, body
 body
     display flex
     flex-direction column
-h1
+#title
     font-size 60px
     margin-bottom 5px
+    font-weight 800
+#title span
+    display block
+
+.under
+    text-decoration underline
 
 .content
     flex 1
+    display -webkit-box
+    display -moz-box
+    display -ms-flexbox
+    display -webkit-flex
     display flex
+    -webkit-box-pack center
+    -moz-box-pack center
+    -ms-flex-pack center
+    -webkit-justify-content center
+    justify-content center
+    -webkit-box-align center
+    -moz-box-align center
+    -ms-flex-align center
+    -webkit-align-items center
     justify-content space-around
     align-items center
     flex-wrap wrap
@@ -33,8 +52,8 @@ table
     border-left grid-weight solid grid
     border-right grid-weight solid grid
 #board td
-    width 200px
-    height 200px
+    width 180px
+    height 180px
     text-align center
     vertical-align middle
     font-size 6em
@@ -42,6 +61,10 @@ table
     color piece-color
     cursor hand
     cursor pointer
+#board-container
+    flex 1.5
+    display flex
+    justify-content center
 
 #info
     font-size 2em
@@ -52,6 +75,7 @@ table
     text-align center
     color grid
     margin-bottom 40px
+    flex 1
 
 #reset
     display flex
