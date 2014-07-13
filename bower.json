@@ -1,0 +1,11 @@
+{
+  "name": "MySite",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "jquery": "*"
+  },
+  "install": {
+    "path": "js/vendor"
+  }
+}

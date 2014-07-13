@@ -1,0 +1,16 @@
+{
+  "name": "MySite",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-jade": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-shell": "*"
+  },
+  "scripts": {
+  },
+  "devDependencies": {
+  }
+}

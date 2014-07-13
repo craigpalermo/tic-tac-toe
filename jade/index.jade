@@ -1,0 +1,31 @@
+head
+  script(src='/js/vendor/jquery/jquery.js')
+  script(src='https://cdn.firebase.com/js/client/1.0.17/firebase.js')
+  script(src='/js/index.js')
+  link(rel='stylesheet', href='/css/style.css')
+
+body
+  div.flex
+    div#info
+      h1 Firebase Tic Tac Toe
+      div
+        p You're <strong><span id='player'></span></strong>s
+        p It's <strong><span id='whoseTurn'></span></strong>'s turn
+        p <strong><span id='players'></span></strong> players currently online
+        div#reset Reset
+
+    div
+      table#board
+        tr
+          td#1
+          td#2.cen
+          td#3
+        tr
+          td#4.mid
+          td#5.mid.cen
+          td#6.mid
+        tr
+          td#7
+          td#8.cen
+          td#9
+
