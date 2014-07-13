@@ -5,9 +5,6 @@ listRef = new Firebase("https://t3.firebaseio.com/presence/")
 presenceRef = new Firebase("https://t3.firebaseio.com/.info/connected")
 userRef = listRef.push()
 
-# game values
-movesMade = 0
-
 # add user to presence list
 presenceRef.on "value", (snap) ->
   if snap.val()
@@ -17,9 +14,10 @@ presenceRef.on "value", (snap) ->
 listRef.on "value", (snap) ->
   $('#players').html(parseInt(snap.numChildren()))
 
-# game constants
+# game values
 gameOver = false
 movesMade = 0
+youHaveMoved = false
 
 # select player
 listRef.once 'value', (snapshot) ->
@@ -72,7 +70,7 @@ boxesRef.on 'value', (snapshot) ->
 
   # check if anyone won yet, alert if they did
   # !need to ignore checking this on resets!
-  if not reset
+  if not reset and youHaveMoved
     winner = checkForWinners()
     if winner
       alert "#{winner} wins!"
@@ -95,6 +93,9 @@ checkBox = (box) ->
     player = $('#player').html()
 
     # check if it's your turn
+    if gameOver
+      return
+
     if whoseTurn is player
       if $('#' + parseInt(box)).html() is 'X' or $('#' + parseInt(box)).html() is 'O'
         alert "You can't move there!"
@@ -106,6 +107,9 @@ checkBox = (box) ->
         if player is 'X' then whoseTurn = 'O' else whoseTurn = 'X'
         $('#whoseTurn').html whoseTurn
         whoseTurnRef.set(whoseTurn)
+
+        # you have moved
+        youHaveMoved = true
     else
       alert "It's not your turn yet!"
 
@@ -115,22 +119,24 @@ getOpponent = ->
 
 # resets all spaces to empty
 clearBoard = ->
+  # only allow reset if there are pieces on board
+  if movesMade > 0
+    for num in [1..9]
+      # clear out table cell
+      $('#' + parseInt(num)).html ''
+
+      # set current player in cell to empty
+      boxesRef.child(num).set({player:'empty'})
+
+      # change whoseTurn to other player
+      whoseTurnRef.once 'value', (snapshot) ->
+        whoseTurn = snapshot.val()
+        player = $('#player').html()
+        opponent = getOpponent()
+        if whoseTurn is player then whoseTurnRef.set(opponent) else whoseTurnRef.set(player)
+
   # reset game over flag
   gameOver = false
-
-  for num in [1..9]
-    # clear out table cell
-    $('#' + parseInt(num)).html ''
-
-    # set current player in cell to empty
-    boxesRef.child(num).set({player:'empty'})
-
-    # change whoseTurn to other player
-    whoseTurnRef.once 'value', (snapshot) ->
-      whoseTurn = snapshot.val()
-      player = $('#player').html()
-      opponent = getOpponent()
-      if whoseTurn is player then whoseTurnRef.set(opponent) else whoseTurnRef.set(player)
 
 ####################
 # doc ready

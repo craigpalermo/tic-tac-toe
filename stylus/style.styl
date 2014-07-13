@@ -10,12 +10,19 @@ html
 html, body
     background bg-color
     font-family 'Open Sans', sans-serif
-
-.flex
+body
     display flex
-    height 100%
+    flex-direction column
+h1
+    font-size 60px
+    margin-bottom 5px
+
+.content
+    flex 1
+    display flex
     justify-content space-around
     align-items center
+    flex-wrap wrap
 
 table
     border-collapse collapse
@@ -41,11 +48,14 @@ table
     display flex
     flex-direction column
     justify-content flex-start
-    height 60%
+    align-items center
+    text-align center
     color grid
+    margin-bottom 40px
 
 #reset
     display flex
+    text-align center
     align-items center
     justify-content center
     color grid
@@ -55,3 +65,4 @@ table
     width 170px
     cursor hand
     cursor pointer
+    margin auto

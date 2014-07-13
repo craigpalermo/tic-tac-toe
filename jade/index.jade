@@ -5,7 +5,7 @@ head
   link(rel='stylesheet', href='/css/style.css')
 
 body
-  div.flex
+  div.content.flex
     div#info
       h1 Firebase Tic Tac Toe
       div
@@ -14,7 +14,7 @@ body
         p <strong><span id='players'></span></strong> players currently online
         div#reset Reset
 
-    div
+    div#board-container
       table#board
         tr
           td#1
@@ -28,4 +28,5 @@ body
           td#7
           td#8.cen
           td#9
-
+  footer
+    p Crafted by Craig, 2014
