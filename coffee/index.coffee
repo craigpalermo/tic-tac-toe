@@ -1,20 +1,35 @@
+# Firebase refs
 whoseTurnRef = new Firebase("https://t3.firebaseio.com/whoseTurn")
 boxesRef = new Firebase("https://t3.firebaseio.com/boxes")
-numPlayersRef = new Firebase("https://t3.firebaseio.com/numPlayers")
+listRef = new Firebase("https://t3.firebaseio.com/presence/")
+presenceRef = new Firebase("https://t3.firebaseio.com/.info/connected")
+userRef = listRef.push()
+
+# game values
+movesMade = 0
+
+# add user to presence list
+presenceRef.on "value", (snap) ->
+  if snap.val()
+    userRef.set(true)
+    userRef.onDisconnect().remove()
+
+listRef.on "value", (snap) ->
+  $('#players').html(parseInt(snap.numChildren()))
+
+# game constants
+gameOver = false
+movesMade = 0
 
 # select player
-numPlayersRef.once 'value', (snapshot) ->
-  players = snapshot.val()
+listRef.once 'value', (snapshot) ->
+  players = snapshot.numChildren()
 
   if players % 2 is 0 then player = 'X' else player = 'O'
   if player is 'X' then opponent = 'O' else opponent = 'X'
 
   $('#player').html player
   $('#opponent').html opponent
-
-  players += 1
-  numPlayersRef.set(players)
-  numPlayersRef.onDisconnect().set(players - 1)
 
 # returns X or O if either has won, null otherwise
 getCell = (id) ->
@@ -27,6 +42,8 @@ checkRow = (l, boxes) ->
   else
     return null
 
+reset = false
+
 # returns X or O if a player won, null if not
 checkForWinners = ->
   cols = [[1,2,3], [4,5,6], [7,8,9], [1,5,9], [3,5,7], [1,4,7], [2,5,8], [3,6,9]]
@@ -37,14 +54,10 @@ checkForWinners = ->
         return winner
   return null
 
-reset = false
-
-# update player count
-numPlayersRef.on 'value', (snapshot) ->
-  $('#players').html(parseInt(snapshot.val()))
-
 # update board every time a move is made
 boxesRef.on 'value', (snapshot) ->
+  movesMade = 0
+
   # iterate over each box
   snapshot.forEach (child) ->
     num = child.name()
@@ -52,6 +65,7 @@ boxesRef.on 'value', (snapshot) ->
 
     if player isnt 'empty'
       $("#" + parseInt(num)).html player
+      movesMade += 1
     else
       $("#" + parseInt(num)).html ''
     return
@@ -62,6 +76,10 @@ boxesRef.on 'value', (snapshot) ->
     winner = checkForWinners()
     if winner
       alert "#{winner} wins!"
+      gameOver = true
+    else if movesMade >= 9
+      alert "It's a draw!"
+      gameOver = true
 
   # to cover the case when opponent resets, turn off our reset flag
   reset = false
@@ -97,6 +115,9 @@ getOpponent = ->
 
 # resets all spaces to empty
 clearBoard = ->
+  # reset game over flag
+  gameOver = false
+
   for num in [1..9]
     # clear out table cell
     $('#' + parseInt(num)).html ''
