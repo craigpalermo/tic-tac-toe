@@ -3,6 +3,7 @@ whoseTurnRef = new Firebase("https://t3.firebaseio.com/whoseTurn")
 boxesRef = new Firebase("https://t3.firebaseio.com/boxes")
 listRef = new Firebase("https://t3.firebaseio.com/presence/")
 presenceRef = new Firebase("https://t3.firebaseio.com/.info/connected")
+gameOverRef = new Firebase("https://t3.firebaseio.com/gameOver")
 userRef = listRef.push()
 
 # add user to presence list
@@ -16,9 +17,8 @@ listRef.on "value", (snap) ->
   $('#players').html(parseInt(snap.numChildren()))
 
 # game values
-gameOver = false
 movesMade = 0
-youHaveMoved = false
+reset = false
 
 # select player
 whoseTurnRef.once 'value', (snapshot) ->
@@ -38,8 +38,6 @@ checkRow = (l, boxes) ->
   else
     return null
 
-reset = false
-
 # returns X or O if a player won, null if not
 checkForWinners = ->
   cols = [[1,2,3], [4,5,6], [7,8,9], [1,5,9], [3,5,7], [1,4,7], [2,5,8], [3,6,9]]
@@ -47,8 +45,14 @@ checkForWinners = ->
     for i in cols
       winner = checkRow(l, i)
       if winner
+
+        gameOverRef.set(true)
         return winner
   return null
+
+isGameOver = ->
+  gameOverRef.once 'value', (snap) ->
+    return snap.val()
 
 # update board every time a move is made
 boxesRef.on 'value', (snapshot) ->
@@ -66,9 +70,12 @@ boxesRef.on 'value', (snapshot) ->
       $("#" + parseInt(num)).html ''
     return
 
+  # check if opponent moved and caused game to end
+  gameOver = isGameOver()
+  winner = checkForWinners()
+
   # check if anyone won yet, alert if they did
-  # !need to ignore checking this on resets!
-  if not reset and youHaveMoved
+  if (not reset and gameOver) or winner
     winner = checkForWinners()
     if winner
       vex.dialog.alert "#{winner} wins!"
@@ -77,9 +84,6 @@ boxesRef.on 'value', (snapshot) ->
       vex.dialog.alert "It's a draw!"
       gameOver = true
 
-  # to cover the case when opponent resets, turn off our reset flag
-  reset = false
-
 # change the player at box
 checkBox = (box) ->
   whoseTurnRef.once 'value', (snapshot) ->
@@ -87,7 +91,7 @@ checkBox = (box) ->
     player = $('#player').html()
 
     # check if it's your turn
-    if gameOver
+    if isGameOver()
       return
 
     if whoseTurn is player
@@ -129,8 +133,7 @@ clearBoard = ->
         opponent = getOpponent()
         if whoseTurn is player then whoseTurnRef.set(opponent) else whoseTurnRef.set(player)
 
-  # reset game over flag
-  gameOver = false
+    gameOverRef.set(false)
 
 ####################
 # doc ready
