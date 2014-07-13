@@ -1,9 +1,10 @@
 # Firebase refs
-whoseTurnRef = new Firebase("https://t3.firebaseio.com/whoseTurn")
-boxesRef = new Firebase("https://t3.firebaseio.com/boxes")
-listRef = new Firebase("https://t3.firebaseio.com/presence/")
-presenceRef = new Firebase("https://t3.firebaseio.com/.info/connected")
-gameOverRef = new Firebase("https://t3.firebaseio.com/gameOver")
+appName = "t3-dev"
+whoseTurnRef = new Firebase("https://#{appName}.firebaseio.com/whoseTurn")
+boxesRef = new Firebase("https://#{appName}.firebaseio.com/boxes")
+listRef = new Firebase("https://#{appName}.firebaseio.com/presence/")
+presenceRef = new Firebase("https://#{appName}.firebaseio.com/.info/connected")
+gameOverRef = new Firebase("https://#{appName}.firebaseio.com/gameOver")
 userRef = listRef.push()
 
 # add user to presence list
@@ -75,7 +76,7 @@ boxesRef.on 'value', (snapshot) ->
   winner = checkForWinners()
 
   # check if anyone won yet, alert if they did
-  if (not reset and gameOver) or winner
+  if (not reset and gameOver) or winner or movesMade >= 9
     winner = checkForWinners()
     if winner
       vex.dialog.alert "#{winner} wins!"
