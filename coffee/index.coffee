@@ -15,7 +15,9 @@ presenceRef.on "value", (snap) ->
 
 # update number of players on page
 listRef.on "value", (snap) ->
-  $('#players').html(parseInt(snap.numChildren()))
+  numPlayers = parseInt(snap.numChildren())
+  $('#players').html numPlayers
+  $(document).prop "title", "Tic-Tac-Toe (#{numPlayers})"
 
 # game values
 movesMade = 0
